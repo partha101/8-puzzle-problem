@@ -1,5 +1,6 @@
 import heap # imported heapq for implementing the queue of the search algorithm
 import copy # imported copy in order to copy nodes used in the expand node functionality
+import enum from Enum # imported enum datatype to enumerate over the algorithms
 
 class Algorithm(Enum):
     UNIFORM_COST_SEARCH = 1
@@ -67,6 +68,72 @@ def EXPAND(node):
             chidren.append(new_node) # appending the new node to the list of children
 
     return children # returning the array of children after expanding
+
+# adding a function to print the puzzle
+def print_puzzle(puzzle):
+    for subarray in puzzle:
+        print(subarray)
+    print()
+
+
+# Now we are going to define the cost functions for different heuristics
+def cost_function(puzzle, goal, algorithm):
+    cost = 0
+    if (algorithm == Algorithm.MISPLACED_TILE_HEURISTIC):
+        for i in range(len(puzzle)):
+            for j in range(len(puzzle[i]):
+                if puzzle[i][j] != 0: 
+                    cost += int(puzzle[i][j] == goal[i][j]) # checking the misplaced tile numbers
+    
+    elif (algorithm == Algorithm.MANHATTAN_DISTANCE_HEURISTIC):
+        for i in range(len(puzzle)):
+            for j in range(len(puzzle[i])):
+                if puzzle[i][j] != 0:
+                    target_row, target_col = divmod(puzzle[i][j] - 1, len(puzzle))
+                    cost += abs(i-target_row) + abs(j-target_col)
+    return cost
+
+
+# Now we are going to define the general search algorithm
+def general_search(puzzle, goal, algorithm):
+    initial_node = Node(puzzle, None, None, 0, 0)
+    queue = [initial_node]
+    nodes_expanded = 0
+    max_queue_size = 0
+
+    # till the queue is not empty 
+    while queue:
+        max_queue_size = max(max_queue_size, len(queue))
+        node = heapq.heappop(queue)
+        if node.state == goal:
+            return node, nodes_expanded, max_queue_size
+        children = EXPAND(node)
+        
+        for child in children:
+           child.cost = child.depth + cost_function(child.state, goal, algorithm) # here we are calculating f(n) = g(n) + h(n)
+    return None, nodes_expanded, max_queue_size # in case we don't find a solution
+
+
+# defining a function to print the solution
+
+def print_solution(node, nodes_expanded, max_queue_size):
+    path = []
+    while node is not None:
+        path.append(node)
+        node = node.parent
+
+    path.reverse()
+
+    for step, node in enumerate(path):
+        if node.operator is not None:
+            print(f"The best state to expand with a g(n) = {node.depth} and h(n) = {node.cost - node.depth} is...")
+        else:
+            print("The best state to expand with a g(n) = 0 and h(n) =", node.cost, "is...")
+
+     print("Goal state!")
+     print("Solution depth was", path[-1].depth)
+     print("Number of nodes expanded:", nodes_expanded)
+     print("Max queue size:", max_queue_size)
 
 
 
