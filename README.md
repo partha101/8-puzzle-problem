@@ -4,7 +4,7 @@
 *   To run the program simply clone the repository by running the command 
 
 ```
-# git clone https://github.com/partha101/8-puzzle-problem.git
+git clone https://github.com/partha101/8-puzzle-problem.git
 ```
 
 
@@ -15,7 +15,7 @@
 
 
 ```
-# python3 8-puzzle-solution.py
+python3 8-puzzle-solution.py
 ```
 
 
